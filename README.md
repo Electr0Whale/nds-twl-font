@@ -1,59 +1,64 @@
-# TWiLight Menu++ CJK Font Tools
+# TWiLight Menu++ CJK Glyph Tools (`nds-twl-font`)
 
-[简体中文](README.zh-CN.md)
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Nintendo%20DS%20%2F%20DSi-e60012.svg?style=flat-square" alt="Platform">
+  <img src="https://img.shields.io/badge/Frontend-TWiLight%20Menu%2B%2B-5c2d91.svg?style=flat-square" alt="TWiLight Menu++">
+  <img src="https://img.shields.io/badge/Language-Python%203-3776ab.svg?style=flat-square" alt="Python 3">
+  <img src="https://img.shields.io/badge/Formats-NFTR%20%7C%20BDF%20%7C%20BMP-orange.svg?style=flat-square" alt="Formats">
+</p>
 
-Python tools for rendering CJK fonts into pixel-aligned BMP tilesets that can
-be imported into TWiLight Menu++ NFTR fonts with a compatible NFTR editor.
-These scripts generate bitmap source images; they do not create or rewrite
-NFTR files directly.
+[English](README.md) · [简体中文](README.zh-CN.md)
 
-![TWiLight Menu++ font comparison](comparison.jpg)
+Python utilities for rendering CJK fonts into pixel-aligned BMP glyph sheets. The generated BMPs can be imported into TWiLight Menu++ font files using a compatible NFTR editor.
 
-> [!IMPORTANT]
-> The Python scripts were developed with Gemini assistance. Review the output
-> visually before importing it into a font.
+These scripts only generate bitmap sheets for import; they do not edit NFTR files directly.
+
+<p align="center">
+  <img src="assets/comparison.jpg" alt="TWiLight Menu++ Font Comparison" width="700">
+</p>
+
+---
+
+## Directory Structure
+
+```text
+nds-twl-font/
+├── scripts/
+│   ├── PixelBitmap_Base.py           # Single-font fixed-offset generation
+│   ├── PixelBitmap_AutoCenter.py      # Automatic centering for non-CJK characters
+│   ├── PixelBitmap_DualFallback.py    # Dual-font fallback with per-font offsets
+│   └── PixelBitmap_ColorFix.py        # Color normalization and anti-alias cleanup
+├── fonts/
+│   ├── fusionPixel_12px.bdf          # Fusion Pixel font (12px)
+│   ├── wenquanyi_12px.bdf            # WenQuanYi Bitmap Song (12px)
+│   └── wenquanyi_13px.bdf            # WenQuanYi Bitmap Song (13px)
+├── default/
+│   ├── small.nftr / .json            # Official small NFTR and char table
+│   └── large.nftr / .json            # Official large NFTR and char table
+├── assets/
+│   └── comparison.jpg                # Demonstration graphic
+├── README.md
+└── README.zh-CN.md
+```
+
+---
 
 ## Requirements
 
-- Python 3 with Pillow.
-- `small.nftr` or `large.nftr` from
-  `sd:/_nds/TWiLightMenu/extras/fonts/Default/`.
-- A JSON character map exported by an NFTR editor.
-- An NFTR editor capable of importing bitmap tiles.
+- Python 3 with Pillow:
+  ```powershell
+  python -m pip install Pillow
+  ```
+- `small.nftr` or `large.nftr` from `sd:/_nds/TWiLightMenu/extras/fonts/Default/` (samples provided in `default/`);
+- Character order JSON exported from your NFTR editor;
+- An NFTR editor supporting BMP tile import.
 
-Install Pillow:
-
-```powershell
-python -m pip install Pillow
-```
-
-## Included scripts
-
-| Script | Purpose |
-| --- | --- |
-| `PixelBitmap_Base.py` | Basic single-font BMP tileset renderer with fixed offsets |
-| `PixelBitmap_AutoCenter.py` | Automatically centers non-CJK characters inside each cell |
-| `PixelBitmap_DualFallback.py` | Uses a secondary font when the primary font lacks a glyph and supports separate offsets |
-| `PixelBitmap_ColorFix.py` | Normalizes bitmap colors to remove antialiasing or color-fringe artifacts before import |
-
-The scripts open file-selection dialogs for the character-map JSON, source
-font, optional fallback font, and output BMP.
+---
 
 ## Workflow
 
-1. Export the character order from the target NFTR as JSON.
-2. Run the script that matches the desired fallback and alignment behavior.
-3. Inspect the generated BMP at native resolution.
-4. Import the BMP tiles into the original NFTR with an NFTR editor.
-5. Save the NFTR under
-   `sd:/_nds/TWiLightMenu/extras/fonts/<FontName>/` and test it on hardware.
-
-The default layouts used by the scripts are `12 × 16` for small glyph cells
-and `14 × 17` for large cells. Confirm cell size, font size, and offsets before
-generating a complete tileset.
-
-## Fonts and releases
-
-The repository includes BDF material derived from WenQuanYi Bitmap Song and
-Fusion Pixel Font. Their original licenses continue to apply. Existing
-Releases provide WenQuanYi-only and WenQuanYi/Fusion combined builds.
+1. Export character order JSON from the target NFTR.
+2. Run the desired script in `scripts/` to generate bitmap sheets.
+3. Review the output BMP at 1:1 native scale.
+4. Import the BMP tiles into the base NFTR using your NFTR tool.
+5. Deploy to `sd:/_nds/TWiLightMenu/extras/fonts/<FontName>/` on your console.
